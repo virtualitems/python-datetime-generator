@@ -45,19 +45,26 @@ def datetime_range(start_datetime, end_datetime, step = None):
     else:
         assert isinstance(step, timedelta), 'step must be a timedelta'
 
+    is_step_positive = step.total_seconds() > 0
+
     assert (
-        (start_datetime <= end_datetime and step.total_seconds() > 0)
+        (start_datetime <= end_datetime and is_step_positive)
         or
-        (start_datetime >= end_datetime and step.total_seconds() < 0)
+        (start_datetime >= end_datetime and not is_step_positive)
     ), '(start must be less than end and step must be positive)'\
        'or (start must be greater than end and step must be negative)'
 
     # PROCESSING
 
     current_datetime = start_datetime
-    while current_datetime <= end_datetime:
-        yield current_datetime
-        current_datetime += step
+    if is_step_positive:
+        while current_datetime <= end_datetime:
+            yield current_datetime
+            current_datetime += step
+    else:
+        while current_datetime >= end_datetime:
+            yield current_datetime
+            current_datetime += step
 
 
 def date_range(start_date, end_date, step = None):
@@ -74,16 +81,23 @@ def date_range(start_date, end_date, step = None):
     else:
         assert isinstance(step, timedelta), 'step must be a timedelta'
 
+    is_step_positive = step.days > 0
+
     assert (
-        (start_date <= end_date and step.days > 0)
+        (start_date <= end_date and is_step_positive)
         or
-        (start_date >= end_date and step.days < 0)
+        (start_date >= end_date and not is_step_positive)
     ), '(start must be less than end and step must be positive)'\
        'or (start must be greater than end and step must be negative)'
 
     # PROCESSING
 
     current_date = start_date
-    while current_date <= end_date:
-        yield current_date
-        current_date += step
+    if is_step_positive:
+        while current_date <= end_date:
+            yield current_date
+            current_date += step
+    else:
+        while current_date >= end_date:
+            yield current_date
+            current_date += step
