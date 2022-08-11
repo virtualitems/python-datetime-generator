@@ -74,12 +74,10 @@ def date_range(start_date, end_date, step = None):
     else:
         assert isinstance(step, timedelta), 'step must be a timedelta'
 
-    is_step_positive = step.days > 0
-
     assert (
-        (start_date <= end_date and is_step_positive)
+        (start_date <= end_date and step.days > 0)
         or
-        (start_date >= end_date and not is_step_positive)
+        (start_date >= end_date and step.days < 0)
     ), '(start must be less than end and step must be positive)'\
        'or (start must be greater than end and step must be negative)'
 
